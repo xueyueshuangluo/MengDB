@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
@@ -17,11 +17,12 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 public class TableManager {
+
 	private static final TableManager MANAGER = new TableManager();
 	private final Map<String, MengTable> tables;
 
 	private TableManager() {
-		this.tables = new HashMap<String, MengTable>();
+		this.tables = new ConcurrentHashMap<String, MengTable>();
 	}
 
 	public static TableManager getManager() {
@@ -29,40 +30,40 @@ public class TableManager {
 	}
 
 	public MengTable getTable(String name) {
-		synchronized (getTables()) {
-			if (getTables().containsKey(name)) {
-				System.out.println("TableManage.getTable.Exist");
-				return getTables().get(name);
-			} else {
-				System.out.println("TableManage.getTable.NotExist");
-				initTable(name);
-				getTable(name);
-			}
-			return getTables().get(name);
+		if (getTables().containsKey(name)) {
+			System.out.println("TableManage.getTable.Exist");
+		} else {
+			System.out.println("TableManage.getTable.NotExist");
+			initTable(name);
 		}
+		return getTables().get(name);
 	}
 
-	private void initTable(String name) {
-		// File file = new File(MengDB.get().getDataFolder(), name);
-		File file = new File(name);
-
-		if (file.exists()) {
-			try {
-				FileInputStream stream = new FileInputStream(file);
-				InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
-				JsonObject object = new JsonParser().parse(reader).getAsJsonObject();
-				getTables().put(name, new DefaultMengTable(object));
-			} catch (JsonIOException e) {
-				e.printStackTrace();
-			} catch (JsonSyntaxException e) {
-				e.printStackTrace();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
+	private synchronized void initTable(String name) {
+		if (getTables().containsKey(name)) {
+			System.out.println("TableManage.initTable.Exist");
 		} else {
-			getTables().put(name, new DefaultMengTable(new JsonObject()));
+			System.out.println("TableManage.initTable.NotExist");
+			// File file = new File(MengDB.get().getDataFolder(), name+".json");
+			File file = new File(name + ".json");
+			if (file.exists()) {
+				try {
+					FileInputStream stream = new FileInputStream(file);
+					InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
+					JsonObject object = new JsonParser().parse(reader).getAsJsonObject();
+					getTables().put(name, new DefaultMengTable(object));
+				} catch (JsonIOException e) {
+					e.printStackTrace();
+				} catch (JsonSyntaxException e) {
+					e.printStackTrace();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			} else {
+				getTables().put(name, new DefaultMengTable(new JsonObject()));
+			}
 		}
 	}
 
@@ -87,9 +88,8 @@ public class TableManager {
 
 		@Override
 		public void run() {
-			// File file = new File(MengDB.get().getDataFolder(), getName());
-			File file = new File(getName());
-
+			// File file = new File(MengDB.get().getDataFolder(),getName()+".json");
+			File file = new File(getName() + ".json");
 			try {
 				FileOutputStream out = new FileOutputStream(file);
 				OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8");
