@@ -8,6 +8,7 @@ public class MengDB extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		setMengDB(this);
+		saveDefaultConfig();
 	}
 
 	public static MengDB get() {
