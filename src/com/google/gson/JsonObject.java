@@ -30,11 +30,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class JsonObject extends JsonElement {
   private final Map<String, JsonElement> members;
-
+  
   public JsonObject() {
+	// TODO Auto-generated constructor stub
 	  this.members = new ConcurrentHashMap<String, JsonElement>();
 }
-  
+
   @Override
   JsonObject deepCopy() {
     JsonObject result = new JsonObject();

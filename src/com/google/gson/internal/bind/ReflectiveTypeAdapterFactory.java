@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.internal.$Gson$Types;
 import com.google.gson.internal.ConstructorConstructor;
@@ -36,6 +37,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static com.google.gson.internal.bind.JsonAdapterAnnotationTypeAdapterFactory.getTypeAdapter;
 
 /**
  * Type adapter that reflects over the fields and methods of a class.
@@ -76,10 +79,9 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
       final Gson context, final Field field, final String name,
       final TypeToken<?> fieldType, boolean serialize, boolean deserialize) {
     final boolean isPrimitive = Primitives.isPrimitive(fieldType.getRawType());
-
     // special casing primitives here saves ~5% on Android...
     return new ReflectiveTypeAdapterFactory.BoundField(name, serialize, deserialize) {
-      final TypeAdapter<?> typeAdapter = context.getAdapter(fieldType);
+      final TypeAdapter<?> typeAdapter = getFieldAdapter(context, field, fieldType);
       @SuppressWarnings({"unchecked", "rawtypes"}) // the type adapter and field type always agree
       @Override void write(JsonWriter writer, Object value)
           throws IOException, IllegalAccessException {
@@ -96,6 +98,15 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
         }
       }
     };
+  }
+
+  private TypeAdapter<?> getFieldAdapter(Gson gson, Field field, TypeToken<?> fieldType) {
+    JsonAdapter annotation = field.getAnnotation(JsonAdapter.class);
+    if (annotation != null) {
+      TypeAdapter<?> adapter = getTypeAdapter(constructorConstructor, gson, fieldType, annotation);
+      if (adapter != null) return adapter;
+    }
+    return gson.getAdapter(fieldType);
   }
 
   private Map<String, BoundField> getBoundFields(Gson context, TypeToken<?> type, Class<?> raw) {
