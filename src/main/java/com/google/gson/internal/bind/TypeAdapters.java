@@ -40,7 +40,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
+import com.google.gson.SafeJsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
@@ -661,7 +661,7 @@ public final class TypeAdapters {
         in.endArray();
         return array;
       case BEGIN_OBJECT:
-        JsonObject object = new JsonObject();
+        SafeJsonObject object = new SafeJsonObject();
         in.beginObject();
         while (in.hasNext()) {
           object.add(in.nextName(), read(in));

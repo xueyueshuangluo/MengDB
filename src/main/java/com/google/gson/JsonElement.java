@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * A class representing an element of Json. It could either be a {@link JsonObject}, a
+ * A class representing an element of Json. It could either be a {@link SafeJsonObject}, a
  * {@link JsonArray}, a {@link JsonPrimitive} or a {@link JsonNull}.
  *
  * @author Inderjeet Singh
@@ -49,10 +49,10 @@ public abstract class JsonElement {
   /**
    * provides check for verifying if this element is a Json object or not.
    *
-   * @return true if this element is of type {@link JsonObject}, false otherwise.
+   * @return true if this element is of type {@link SafeJsonObject}, false otherwise.
    */
   public boolean isJsonObject() {
-    return this instanceof JsonObject;
+    return this instanceof SafeJsonObject;
   }
 
   /**
@@ -75,17 +75,17 @@ public abstract class JsonElement {
   }
 
   /**
-   * convenience method to get this element as a {@link JsonObject}. If the element is of some
+   * convenience method to get this element as a {@link SafeJsonObject}. If the element is of some
    * other type, a {@link IllegalStateException} will result. Hence it is best to use this method
    * after ensuring that this element is of the desired type by calling {@link #isJsonObject()}
    * first.
    *
-   * @return get this element as a {@link JsonObject}.
+   * @return get this element as a {@link SafeJsonObject}.
    * @throws IllegalStateException if the element is of another type.
    */
-  public JsonObject getAsJsonObject() {
+  public SafeJsonObject getAsJsonObject() {
     if (isJsonObject()) {
-      return (JsonObject) this;
+      return (SafeJsonObject) this;
     }
     throw new IllegalStateException("Not a JSON Object: " + this);
   }

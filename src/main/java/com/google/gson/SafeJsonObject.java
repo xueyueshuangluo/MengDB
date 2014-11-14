@@ -28,17 +28,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Inderjeet Singh
  * @author Joel Leitch
  */
-public final class JsonObject extends JsonElement {
+public final class SafeJsonObject extends JsonElement {
   private final Map<String, JsonElement> members;
   
-  public JsonObject() {
+  public SafeJsonObject() {
 	// TODO Auto-generated constructor stub
 	  this.members = new ConcurrentHashMap<String, JsonElement>();
 }
 
   @Override
-  JsonObject deepCopy() {
-    JsonObject result = new JsonObject();
+  SafeJsonObject deepCopy() {
+    SafeJsonObject result = new SafeJsonObject();
     for (Map.Entry<String, JsonElement> entry : members.entrySet()) {
       result.add(entry.getKey(), entry.getValue().deepCopy());
     }
@@ -61,7 +61,7 @@ public final class JsonObject extends JsonElement {
   }
 
   /**
-   * Removes the {@code property} from this {@link JsonObject}.
+   * Removes the {@code property} from this {@link SafeJsonObject}.
    *
    * @param property name of the member that should be removed.
    * @return the {@link JsonElement} object that is being removed.
@@ -181,14 +181,14 @@ public final class JsonObject extends JsonElement {
    * @param memberName name of the member being requested.
    * @return the JsonObject corresponding to the specified member.
    */
-  public JsonObject getAsJsonObject(String memberName) {
-    return (JsonObject) members.get(memberName);
+  public SafeJsonObject getAsJsonObject(String memberName) {
+    return (SafeJsonObject) members.get(memberName);
   }
 
   @Override
   public boolean equals(Object o) {
-    return (o == this) || (o instanceof JsonObject
-        && ((JsonObject) o).members.equals(members));
+    return (o == this) || (o instanceof SafeJsonObject
+        && ((SafeJsonObject) o).members.equals(members));
   }
 
   @Override

@@ -7,13 +7,13 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.SafeJsonObject;
 
 public class DefaultMengTable implements MengTable {
 
-	private final JsonObject object;
+	private final SafeJsonObject object;
 
-	public DefaultMengTable(JsonObject object) {
+	public DefaultMengTable(SafeJsonObject object) {
 		this.object = object;
 	}
 
@@ -46,7 +46,7 @@ public class DefaultMengTable implements MengTable {
 		List<MengRecord> list = new ArrayList<MengRecord>();
 		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
 		for (Entry<String, JsonElement> entry : entrys) {
-			JsonObject o = entry.getValue().getAsJsonObject();
+			SafeJsonObject o = entry.getValue().getAsJsonObject();
 			if (o.has(key) && o.get(key).getAsString().equals(value)) {
 				list.add(new DefaultMengRecord(entry.getKey(), o));
 			}
@@ -58,7 +58,7 @@ public class DefaultMengTable implements MengTable {
 	public MengRecord findOne(String key, String value) {
 		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
 		for (Entry<String, JsonElement> entry : entrys) {
-			JsonObject o = entry.getValue().getAsJsonObject();
+			SafeJsonObject o = entry.getValue().getAsJsonObject();
 			if (o.has(key) && o.get(key).getAsString().equals(value)) {
 				return new DefaultMengRecord(entry.getKey(), o);
 			}
@@ -78,7 +78,7 @@ public class DefaultMengTable implements MengTable {
 		}
 	}
 
-	private JsonObject getObject() {
+	private SafeJsonObject getObject() {
 		return object;
 	}
 

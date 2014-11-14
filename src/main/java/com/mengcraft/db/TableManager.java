@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
+import com.google.gson.SafeJsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
@@ -44,13 +44,12 @@ public class TableManager {
 			System.out.println("TableManage.initTable.Exist");
 		} else {
 			System.out.println("TableManage.initTable.NotExist");
-			// File file = new File(MengDB.get().getDataFolder(), name+".json");
-			File file = new File(name + ".json");
+			File file = new File(MengDB.get().getDataFolder(), name + ".json");
 			if (file.exists()) {
 				try {
 					FileInputStream stream = new FileInputStream(file);
 					InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
-					JsonObject object = new JsonParser().parse(reader).getAsJsonObject();
+					SafeJsonObject object = new JsonParser().parse(reader).getAsJsonObject();
 					getTables().put(name, new DefaultMengTable(object));
 				} catch (JsonIOException e) {
 					e.printStackTrace();
@@ -62,7 +61,7 @@ public class TableManager {
 					e.printStackTrace();
 				}
 			} else {
-				getTables().put(name, new DefaultMengTable(new JsonObject()));
+				getTables().put(name, new DefaultMengTable(new SafeJsonObject()));
 			}
 		}
 	}
@@ -88,8 +87,7 @@ public class TableManager {
 
 		@Override
 		public void run() {
-			// File file = new File(MengDB.get().getDataFolder(),getName()+".json");
-			File file = new File(getName() + ".json");
+			File file = new File(MengDB.get().getDataFolder(), getName() + ".json");
 			try {
 				FileOutputStream out = new FileOutputStream(file);
 				OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8");

@@ -19,7 +19,7 @@ package com.google.gson.internal.bind;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
+import com.google.gson.SafeJsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -68,7 +68,7 @@ public final class JsonTreeReader extends JsonReader {
 
   @Override public void beginObject() throws IOException {
     expect(JsonToken.BEGIN_OBJECT);
-    JsonObject object = (JsonObject) peekStack();
+    SafeJsonObject object = (SafeJsonObject) peekStack();
     stack.add(object.entrySet().iterator());
   }
 
@@ -90,7 +90,7 @@ public final class JsonTreeReader extends JsonReader {
 
     Object o = peekStack();
     if (o instanceof Iterator) {
-      boolean isObject = stack.get(stack.size() - 2) instanceof JsonObject;
+      boolean isObject = stack.get(stack.size() - 2) instanceof SafeJsonObject;
       Iterator<?> iterator = (Iterator<?>) o;
       if (iterator.hasNext()) {
         if (isObject) {
@@ -102,7 +102,7 @@ public final class JsonTreeReader extends JsonReader {
       } else {
         return isObject ? JsonToken.END_OBJECT : JsonToken.END_ARRAY;
       }
-    } else if (o instanceof JsonObject) {
+    } else if (o instanceof SafeJsonObject) {
       return JsonToken.BEGIN_OBJECT;
     } else if (o instanceof JsonArray) {
       return JsonToken.BEGIN_ARRAY;

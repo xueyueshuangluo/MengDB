@@ -81,7 +81,7 @@ public final class JsonPrimitive extends JsonElement {
    *
    * @param primitive the value to create the primitive with.
    */
-  JsonPrimitive(Object primitive) {
+  public JsonPrimitive(Object primitive) {
     setValue(primitive);
   }
 

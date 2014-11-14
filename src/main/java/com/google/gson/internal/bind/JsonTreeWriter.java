@@ -19,7 +19,7 @@ package com.google.gson.internal.bind;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
+import com.google.gson.SafeJsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
@@ -75,7 +75,7 @@ public final class JsonTreeWriter extends JsonWriter {
   private void put(JsonElement value) {
     if (pendingName != null) {
       if (!value.isJsonNull() || getSerializeNulls()) {
-        JsonObject object = (JsonObject) peek();
+        SafeJsonObject object = (SafeJsonObject) peek();
         object.add(pendingName, value);
       }
       pendingName = null;
@@ -111,7 +111,7 @@ public final class JsonTreeWriter extends JsonWriter {
   }
 
   @Override public JsonWriter beginObject() throws IOException {
-    JsonObject object = new JsonObject();
+    SafeJsonObject object = new SafeJsonObject();
     put(object);
     stack.add(object);
     return this;
@@ -122,7 +122,7 @@ public final class JsonTreeWriter extends JsonWriter {
       throw new IllegalStateException();
     }
     JsonElement element = peek();
-    if (element instanceof JsonObject) {
+    if (element instanceof SafeJsonObject) {
       stack.remove(stack.size() - 1);
       return this;
     }
@@ -134,7 +134,7 @@ public final class JsonTreeWriter extends JsonWriter {
       throw new IllegalStateException();
     }
     JsonElement element = peek();
-    if (element instanceof JsonObject) {
+    if (element instanceof SafeJsonObject) {
       pendingName = name;
       return this;
     }

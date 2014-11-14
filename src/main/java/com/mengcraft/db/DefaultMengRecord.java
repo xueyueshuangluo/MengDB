@@ -6,24 +6,24 @@ import java.util.UUID;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.SafeJsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 public class DefaultMengRecord implements MengRecord {
 
-	private final JsonObject object;
+	private final SafeJsonObject object;
 	private final String uid;
 
 	public DefaultMengRecord() {
-		this(UUID.randomUUID().toString(), new JsonObject());
+		this(UUID.randomUUID().toString(), new SafeJsonObject());
 	}
 
 	public DefaultMengRecord(String json) {
 		this(UUID.randomUUID().toString(), new JsonParser().parse(json).getAsJsonObject());
 	}
 
-	public DefaultMengRecord(String uid, JsonObject object) {
+	public DefaultMengRecord(String uid, SafeJsonObject object) {
 		this.object = object;
 		this.uid = uid;
 	}
@@ -109,7 +109,7 @@ public class DefaultMengRecord implements MengRecord {
 	}
 
 	@Override
-	public JsonObject getObject() {
+	public SafeJsonObject getObject() {
 		return object;
 	}
 
