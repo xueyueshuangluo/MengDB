@@ -10,6 +10,8 @@ public interface MengTable {
 	public List<MengRecord> find();
 
 	public List<MengRecord> find(String key, String value);
+	
+	public List<MengRecord> find(String key, Number value);
 
 	public MengRecord findOne(String key, String value);
 

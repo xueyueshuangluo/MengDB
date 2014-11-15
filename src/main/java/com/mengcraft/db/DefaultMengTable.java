@@ -55,6 +55,44 @@ public class DefaultMengTable implements MengTable {
 	}
 
 	@Override
+	public List<MengRecord> find(String key, Number value) {
+		List<MengRecord> list = new ArrayList<MengRecord>();
+		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
+		for (Entry<String, JsonElement> entry : entrys) {
+			SafeJsonObject o = entry.getValue().getAsJsonObject();
+			JsonElement e = o.get(key);
+			if (e != null && isElement(e, value)) {
+
+			}
+		}
+		return list;
+	}
+
+	private boolean isElement(JsonElement e, Number value) {
+		if (e.isJsonPrimitive() && e.getAsJsonPrimitive().isNumber()) {
+			Number n = e.getAsJsonPrimitive().getAsNumber();
+			if (n instanceof Integer) {
+				if (value instanceof Integer && n.equals(value)) {
+					return true;
+				}
+			} else if (n instanceof Long) {
+				if (value instanceof Long && n.equals(value)) {
+					return true;
+				}
+			} else if (n instanceof Double) {
+				if (value instanceof Double && n.equals(value)) {
+					return true;
+				}
+			} else if (n instanceof Float) {
+				if (value instanceof Float && n.equals(value)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	@Override
 	public MengRecord findOne(String key, String value) {
 		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
 		for (Entry<String, JsonElement> entry : entrys) {

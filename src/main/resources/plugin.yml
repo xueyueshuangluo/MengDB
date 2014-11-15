@@ -1,3 +1,3 @@
- name: MengDB
- version: 0.1.0
- main: com.mengcraft.db.MengDB
+name: MengDB
+version: ${project.version}
+main: com.mengcraft.db.MengDB
