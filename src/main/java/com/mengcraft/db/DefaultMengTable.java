@@ -1,5 +1,6 @@
 package com.mengcraft.db;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -61,7 +62,7 @@ public class DefaultMengTable implements MengTable {
 		for (Entry<String, JsonElement> entry : entrys) {
 			JsonObject o = entry.getValue().getAsJsonObject();
 			JsonElement e = o.get(key);
-			if (e != null && isElement(e, value)) {
+			if (e != null && compareElement(e, value) == 0) {
 				list.add(new DefaultMengRecord(entry.getKey(), o));
 			}
 		}
@@ -92,28 +93,13 @@ public class DefaultMengTable implements MengTable {
 		}
 	}
 
-	private boolean isElement(JsonElement e, Number value) {
+	private int compareElement(JsonElement e, Number v) {
 		if (e.isJsonPrimitive() && e.getAsJsonPrimitive().isNumber()) {
-			Number n = e.getAsJsonPrimitive().getAsNumber();
-			if (n instanceof Integer) {
-				if (value instanceof Integer && n.equals(value)) {
-					return true;
-				}
-			} else if (n instanceof Long) {
-				if (value instanceof Long && n.equals(value)) {
-					return true;
-				}
-			} else if (n instanceof Double) {
-				if (value instanceof Double && n.equals(value)) {
-					return true;
-				}
-			} else if (n instanceof Float) {
-				if (value instanceof Float && n.equals(value)) {
-					return true;
-				}
-			}
+			BigDecimal one = new BigDecimal(e.toString());
+			BigDecimal two = new BigDecimal(v.toString());
+			return one.compareTo(two);
 		}
-		return false;
+		return 2;
 	}
 
 	private JsonObject getObject() {
