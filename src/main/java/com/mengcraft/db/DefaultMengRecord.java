@@ -27,6 +27,11 @@ public class DefaultMengRecord implements MengRecord {
 		this.object = object;
 		this.uid = uid;
 	}
+	
+	@Override
+	public boolean containsKey(String key) {
+		return getObject().has(key);
+	}
 
 	@Override
 	public void put(String key, String value) {
