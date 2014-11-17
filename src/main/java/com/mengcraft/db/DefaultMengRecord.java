@@ -4,26 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.SafeJsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import com.mengcraft.db.util.com.google.gson.JsonArray;
+import com.mengcraft.db.util.com.google.gson.JsonElement;
+import com.mengcraft.db.util.com.google.gson.JsonObject;
+import com.mengcraft.db.util.com.google.gson.JsonParser;
+import com.mengcraft.db.util.com.google.gson.JsonPrimitive;
 
 public class DefaultMengRecord implements MengRecord {
 
-	private final SafeJsonObject object;
+	private final JsonObject object;
 	private final String uid;
 
 	public DefaultMengRecord() {
-		this(UUID.randomUUID().toString(), new SafeJsonObject());
+		this(UUID.randomUUID().toString(), new JsonObject());
 	}
 
 	public DefaultMengRecord(String json) {
 		this(UUID.randomUUID().toString(), new JsonParser().parse(json).getAsJsonObject());
 	}
 
-	public DefaultMengRecord(String uid, SafeJsonObject object) {
+	public DefaultMengRecord(String uid, JsonObject object) {
 		this.object = object;
 		this.uid = uid;
 	}
@@ -109,7 +109,7 @@ public class DefaultMengRecord implements MengRecord {
 	}
 
 	@Override
-	public SafeJsonObject getObject() {
+	public JsonObject getObject() {
 		return object;
 	}
 

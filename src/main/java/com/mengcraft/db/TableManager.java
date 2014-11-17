@@ -11,10 +11,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.google.gson.JsonIOException;
-import com.google.gson.SafeJsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
+import com.mengcraft.db.util.com.google.gson.JsonIOException;
+import com.mengcraft.db.util.com.google.gson.JsonObject;
+import com.mengcraft.db.util.com.google.gson.JsonParser;
+import com.mengcraft.db.util.com.google.gson.JsonSyntaxException;
 
 public class TableManager {
 
@@ -49,7 +49,7 @@ public class TableManager {
 				try {
 					FileInputStream stream = new FileInputStream(file);
 					InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
-					SafeJsonObject object = new JsonParser().parse(reader).getAsJsonObject();
+					JsonObject object = new JsonParser().parse(reader).getAsJsonObject();
 					getTables().put(name, new DefaultMengTable(object));
 				} catch (JsonIOException e) {
 					e.printStackTrace();
@@ -61,7 +61,7 @@ public class TableManager {
 					e.printStackTrace();
 				}
 			} else {
-				getTables().put(name, new DefaultMengTable(new SafeJsonObject()));
+				getTables().put(name, new DefaultMengTable(new JsonObject()));
 			}
 		}
 	}

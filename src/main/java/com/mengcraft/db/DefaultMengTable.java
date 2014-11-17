@@ -6,14 +6,14 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import com.google.gson.JsonElement;
-import com.google.gson.SafeJsonObject;
+import com.mengcraft.db.util.com.google.gson.JsonElement;
+import com.mengcraft.db.util.com.google.gson.JsonObject;
 
 public class DefaultMengTable implements MengTable {
 
-	private final SafeJsonObject object;
+	private final JsonObject object;
 
-	public DefaultMengTable(SafeJsonObject object) {
+	public DefaultMengTable(JsonObject object) {
 		this.object = object;
 	}
 
@@ -46,7 +46,7 @@ public class DefaultMengTable implements MengTable {
 		List<MengRecord> list = new ArrayList<MengRecord>();
 		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
 		for (Entry<String, JsonElement> entry : entrys) {
-			SafeJsonObject o = entry.getValue().getAsJsonObject();
+			JsonObject o = entry.getValue().getAsJsonObject();
 			if (o.has(key) && o.get(key).getAsString().equals(value)) {
 				list.add(new DefaultMengRecord(entry.getKey(), o));
 			}
@@ -59,13 +59,37 @@ public class DefaultMengTable implements MengTable {
 		List<MengRecord> list = new ArrayList<MengRecord>();
 		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
 		for (Entry<String, JsonElement> entry : entrys) {
-			SafeJsonObject o = entry.getValue().getAsJsonObject();
+			JsonObject o = entry.getValue().getAsJsonObject();
 			JsonElement e = o.get(key);
 			if (e != null && isElement(e, value)) {
-
+				list.add(new DefaultMengRecord(entry.getKey(), o));
 			}
 		}
 		return list;
+	}
+
+	@Override
+	public MengRecord findOne(String key, String value) {
+		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
+		for (Entry<String, JsonElement> entry : entrys) {
+			JsonObject o = entry.getValue().getAsJsonObject();
+			if (o.has(key) && o.get(key).getAsString().equals(value)) {
+				return new DefaultMengRecord(entry.getKey(), o);
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void delete(MengRecord record) {
+		getObject().remove(record.getUid());
+	}
+
+	@Override
+	public void delete(List<MengRecord> records) {
+		for (MengRecord record : records) {
+			delete(record);
+		}
 	}
 
 	private boolean isElement(JsonElement e, Number value) {
@@ -91,32 +115,8 @@ public class DefaultMengTable implements MengTable {
 		}
 		return false;
 	}
-	
-	@Override
-	public MengRecord findOne(String key, String value) {
-		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
-		for (Entry<String, JsonElement> entry : entrys) {
-			SafeJsonObject o = entry.getValue().getAsJsonObject();
-			if (o.has(key) && o.get(key).getAsString().equals(value)) {
-				return new DefaultMengRecord(entry.getKey(), o);
-			}
-		}
-		return null;
-	}
 
-	@Override
-	public void delete(MengRecord record) {
-		getObject().remove(record.getUid());
-	}
-
-	@Override
-	public void delete(List<MengRecord> records) {
-		for (MengRecord record : records) {
-			delete(record);
-		}
-	}
-
-	private SafeJsonObject getObject() {
+	private JsonObject getObject() {
 		return object;
 	}
 

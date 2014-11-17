@@ -2,7 +2,7 @@ package com.mengcraft.db;
 
 import java.util.List;
 
-import com.google.gson.SafeJsonObject;
+import com.mengcraft.db.util.com.google.gson.JsonObject;
 
 public interface MengRecord {
 	
@@ -32,5 +32,5 @@ public interface MengRecord {
 	
 	public String getUid();
 	
-	public SafeJsonObject getObject();
+	public JsonObject getObject();
 }
