@@ -41,6 +41,19 @@ public class DefaultMengTable implements MengTable {
 		}
 		return list;
 	}
+	
+	@Override
+	public List<MengRecord> find(String key) {
+		// TODO Auto-generated method stub
+		List<MengRecord> list = new ArrayList<MengRecord>();
+		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
+		for (Entry<String, JsonElement> entry : entrys) {
+			if (entry.getValue().getAsJsonObject().has(key)) {
+				list.add(new DefaultMengRecord(entry.getKey(), entry.getValue().getAsJsonObject()));
+			}
+		}
+		return list;
+	}
 
 	@Override
 	public List<MengRecord> find(String key, String value) {

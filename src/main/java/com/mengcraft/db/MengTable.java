@@ -8,6 +8,8 @@ public interface MengTable {
 	public void update(MengRecord record);
 
 	public List<MengRecord> find();
+	
+	public List<MengRecord> find(String key);
 
 	public List<MengRecord> find(String key, String value);
 	
