@@ -16,6 +16,8 @@ public interface MengTable {
 	public List<MengRecord> find(String key, Number value);
 
 	public MengRecord findOne(String key, String value);
+	
+	public MengRecord findOne(String key, Number value);
 
 	public void delete(MengRecord record);
 	

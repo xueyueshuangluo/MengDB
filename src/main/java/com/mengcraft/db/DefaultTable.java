@@ -10,11 +10,11 @@ import java.util.UUID;
 import com.mengcraft.db.util.com.google.gson.JsonElement;
 import com.mengcraft.db.util.com.google.gson.JsonObject;
 
-public class DefaultMengTable implements MengTable {
+public class DefaultTable implements MengTable {
 
 	private final JsonObject object;
 
-	public DefaultMengTable(JsonObject object) {
+	public DefaultTable(JsonObject object) {
 		this.object = object;
 	}
 
@@ -41,10 +41,9 @@ public class DefaultMengTable implements MengTable {
 		}
 		return list;
 	}
-	
+
 	@Override
 	public List<MengRecord> find(String key) {
-		// TODO Auto-generated method stub
 		List<MengRecord> list = new ArrayList<MengRecord>();
 		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
 		for (Entry<String, JsonElement> entry : entrys) {
@@ -80,6 +79,19 @@ public class DefaultMengTable implements MengTable {
 			}
 		}
 		return list;
+	}
+
+	@Override
+	public MengRecord findOne(String key, Number value) {
+		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
+		for (Entry<String, JsonElement> entry : entrys) {
+			JsonObject o = entry.getValue().getAsJsonObject();
+			JsonElement e = o.get(key);
+			if (e != null && compareElement(e, value) == 0) {
+				return new DefaultMengRecord(entry.getKey(), o);
+			}
+		}
+		return null;
 	}
 
 	@Override

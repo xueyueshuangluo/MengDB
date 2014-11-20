@@ -31,9 +31,9 @@ public class TableManager {
 
 	public MengTable getTable(String name) {
 		if (getTables().containsKey(name)) {
-			System.out.println("TableManage.getTable.Exist");
+			// System.out.println("TableManage.getTable.Exist");
 		} else {
-			System.out.println("TableManage.getTable.NotExist");
+			// System.out.println("TableManage.getTable.NotExist");
 			initTable(name);
 		}
 		return getTables().get(name);
@@ -41,16 +41,16 @@ public class TableManager {
 
 	private synchronized void initTable(String name) {
 		if (getTables().containsKey(name)) {
-			System.out.println("TableManage.initTable.Exist");
+			// System.out.println("TableManage.initTable.Exist");
 		} else {
-			System.out.println("TableManage.initTable.NotExist");
+			// System.out.println("TableManage.initTable.NotExist");
 			File file = new File(MengDB.get().getDataFolder(), name + ".json");
 			if (file.exists()) {
 				try {
 					FileInputStream stream = new FileInputStream(file);
 					InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
 					JsonObject object = new JsonParser().parse(reader).getAsJsonObject();
-					getTables().put(name, new DefaultMengTable(object));
+					getTables().put(name, new DefaultTable(object));
 				} catch (JsonIOException e) {
 					e.printStackTrace();
 				} catch (JsonSyntaxException e) {
@@ -61,7 +61,7 @@ public class TableManager {
 					e.printStackTrace();
 				}
 			} else {
-				getTables().put(name, new DefaultMengTable(new JsonObject()));
+				getTables().put(name, new DefaultTable(new JsonObject()));
 			}
 		}
 	}
