@@ -120,7 +120,9 @@ public class DefaultMengRecord implements MengRecord {
 
 	@Override
 	public String toString() {
-		return getObject().toString();
+		JsonObject record = new JsonObject();
+		record.add(getUid(), getObject());
+		return record.toString();
 	}
 
 	@Override
