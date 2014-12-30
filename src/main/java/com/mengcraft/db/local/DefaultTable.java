@@ -1,4 +1,4 @@
-package com.mengcraft.db;
+package com.mengcraft.db.local;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import com.mengcraft.db.MengRecord;
+import com.mengcraft.db.MengTable;
 import com.mengcraft.db.util.com.google.gson.JsonElement;
 import com.mengcraft.db.util.com.google.gson.JsonObject;
 

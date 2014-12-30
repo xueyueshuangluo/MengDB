@@ -10,7 +10,11 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import com.mengcraft.db.local.DefaultTable;
 import com.mengcraft.db.util.com.google.gson.JsonIOException;
 import com.mengcraft.db.util.com.google.gson.JsonObject;
 import com.mengcraft.db.util.com.google.gson.JsonParser;
@@ -19,7 +23,8 @@ import com.mengcraft.db.util.com.google.gson.JsonSyntaxException;
 public class TableManager {
 
 	private static final TableManager MANAGER = new TableManager();
-	private final Map<String, MengTable> tables;
+	private final ConcurrentMap<String, MengTable> tables;
+	private final ExecutorService pool = Executors.newSingleThreadExecutor();
 
 	private TableManager() {
 		this.tables = new ConcurrentHashMap<String, MengTable>();
@@ -68,7 +73,8 @@ public class TableManager {
 
 	public void saveTable(String name) {
 		if (getTables().containsKey(name)) {
-			new Thread(new SaveTask(name, getTables().get(name).toString())).start();
+//			new Thread(new SaveTask(name, getTables().get(name).toString())).start();
+			this.pool.execute(new SaveTask(name, getTables().get(name).toString()));
 		}
 	}
 

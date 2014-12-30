@@ -1,1 +1,13 @@
 version: 0.1.0
+
+# This option can be one of 'default', 'server' or 'client'
+mode: default
+
+client:
+  remote: 127.0.0.1
+  port: 40017
+  
+server:
+  listen: 40017
+  allow:
+  - 127.0.0.1
