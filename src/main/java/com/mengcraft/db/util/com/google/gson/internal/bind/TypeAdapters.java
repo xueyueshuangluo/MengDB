@@ -746,19 +746,23 @@ public final class TypeAdapters {
     }
   }
 
-  public static final TypeAdapterFactory ENUM_FACTORY = new TypeAdapterFactory() {
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
-      Class<? super T> rawType = typeToken.getRawType();
-      if (!Enum.class.isAssignableFrom(rawType) || rawType == Enum.class) {
-        return null;
+  public static final TypeAdapterFactory ENUM_FACTORY = newEnumTypeHierarchyFactory();
+
+  public static TypeAdapterFactory newEnumTypeHierarchyFactory() {
+    return new TypeAdapterFactory() {
+      @SuppressWarnings({"rawtypes", "unchecked"})
+      public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
+        Class<? super T> rawType = typeToken.getRawType();
+        if (!Enum.class.isAssignableFrom(rawType) || rawType == Enum.class) {
+          return null;
+        }
+        if (!rawType.isEnum()) {
+          rawType = rawType.getSuperclass(); // handle anonymous subclasses
+        }
+        return (TypeAdapter<T>) new EnumTypeAdapter(rawType);
       }
-      if (!rawType.isEnum()) {
-        rawType = rawType.getSuperclass(); // handle anonymous subclasses
-      }
-      return (TypeAdapter<T>) new EnumTypeAdapter(rawType);
-    }
-  };
+    };
+  }
 
   public static <TT> TypeAdapterFactory newFactory(
       final TypeToken<TT> type, final TypeAdapter<TT> typeAdapter) {
