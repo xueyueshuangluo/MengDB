@@ -6,15 +6,18 @@ import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
+import com.mengcraft.db.local.DefaultManager;
+
 public class MengDB extends JavaPlugin {
-	private static MengDB mengDB;
+	public static MengManager getManager() {
+		return DefaultManager.getManager();
+	}
 
 	@Override
 	public void onLoad() {
-		setMengDB(this);
 		saveDefaultConfig();
 	}
-	
+
 	@Override
 	public void onEnable() {
 		try {
@@ -22,13 +25,5 @@ public class MengDB extends JavaPlugin {
 		} catch (IOException e) {
 			getLogger().log(Level.WARNING, "Can not link to mcstats.org!");
 		}
-	}
-
-	public static MengDB get() {
-		return mengDB;
-	}
-
-	private static void setMengDB(MengDB mengDB) {
-		MengDB.mengDB = mengDB;
 	}
 }

@@ -11,20 +11,20 @@ import com.mengcraft.db.util.com.google.gson.JsonObject;
 import com.mengcraft.db.util.com.google.gson.JsonParser;
 import com.mengcraft.db.util.com.google.gson.JsonPrimitive;
 
-public class DefaultMengRecord implements MengRecord {
+public class DefaultRecord implements MengRecord {
 
 	private final JsonObject object;
 	private final String uid;
 
-	public DefaultMengRecord() {
+	public DefaultRecord() {
 		this(UUID.randomUUID().toString(), new JsonObject());
 	}
 
-	public DefaultMengRecord(String json) {
+	public DefaultRecord(String json) {
 		this(UUID.randomUUID().toString(), new JsonParser().parse(json).getAsJsonObject());
 	}
 
-	public DefaultMengRecord(String uid, JsonObject object) {
+	public DefaultRecord(String uid, JsonObject object) {
 		this.object = object;
 		this.uid = uid;
 	}

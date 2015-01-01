@@ -39,7 +39,7 @@ public class DefaultTable implements MengTable {
 		List<MengRecord> list = new ArrayList<MengRecord>();
 		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
 		for (Entry<String, JsonElement> entry : entrys) {
-			list.add(new DefaultMengRecord(entry.getKey(), entry.getValue().getAsJsonObject()));
+			list.add(new DefaultRecord(entry.getKey(), entry.getValue().getAsJsonObject()));
 		}
 		return list;
 	}
@@ -50,7 +50,7 @@ public class DefaultTable implements MengTable {
 		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
 		for (Entry<String, JsonElement> entry : entrys) {
 			if (entry.getValue().getAsJsonObject().has(key)) {
-				list.add(new DefaultMengRecord(entry.getKey(), entry.getValue().getAsJsonObject()));
+				list.add(new DefaultRecord(entry.getKey(), entry.getValue().getAsJsonObject()));
 			}
 		}
 		return list;
@@ -63,7 +63,7 @@ public class DefaultTable implements MengTable {
 		for (Entry<String, JsonElement> entry : entrys) {
 			JsonObject o = entry.getValue().getAsJsonObject();
 			if (o.has(key) && o.get(key).getAsString().equals(value)) {
-				list.add(new DefaultMengRecord(entry.getKey(), o));
+				list.add(new DefaultRecord(entry.getKey(), o));
 			}
 		}
 		return list;
@@ -77,7 +77,7 @@ public class DefaultTable implements MengTable {
 			JsonObject o = entry.getValue().getAsJsonObject();
 			JsonElement e = o.get(key);
 			if (e != null && compareElement(e, value) == 0) {
-				list.add(new DefaultMengRecord(entry.getKey(), o));
+				list.add(new DefaultRecord(entry.getKey(), o));
 			}
 		}
 		return list;
@@ -90,7 +90,7 @@ public class DefaultTable implements MengTable {
 			JsonObject o = entry.getValue().getAsJsonObject();
 			JsonElement e = o.get(key);
 			if (e != null && compareElement(e, value) == 0) {
-				return new DefaultMengRecord(entry.getKey(), o);
+				return new DefaultRecord(entry.getKey(), o);
 			}
 		}
 		return null;
@@ -102,7 +102,7 @@ public class DefaultTable implements MengTable {
 		for (Entry<String, JsonElement> entry : entrys) {
 			JsonObject o = entry.getValue().getAsJsonObject();
 			if (o.has(key) && o.get(key).getAsString().equals(value)) {
-				return new DefaultMengRecord(entry.getKey(), o);
+				return new DefaultRecord(entry.getKey(), o);
 			}
 		}
 		return null;

@@ -1,4 +1,4 @@
-package com.mengcraft.db;
+package com.mengcraft.db.local;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,23 +14,30 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.mengcraft.db.local.DefaultTable;
+import com.mengcraft.db.MengManager;
+import com.mengcraft.db.MengTable;
 import com.mengcraft.db.util.com.google.gson.JsonIOException;
 import com.mengcraft.db.util.com.google.gson.JsonObject;
 import com.mengcraft.db.util.com.google.gson.JsonParser;
 import com.mengcraft.db.util.com.google.gson.JsonSyntaxException;
 
-public class TableManager {
+public class DefaultManager implements MengManager {
 
-	private static final TableManager MANAGER = new TableManager();
+	private final static DefaultManager MANAGER = new DefaultManager();
+	private final static File DEFAULT_DIRECTORY = new File("data");
 	private final ConcurrentMap<String, MengTable> tables;
 	private final ExecutorService pool = Executors.newSingleThreadExecutor();
 
-	private TableManager() {
+	private DefaultManager() {
 		this.tables = new ConcurrentHashMap<String, MengTable>();
+		if (!DEFAULT_DIRECTORY.exists()) {
+			DEFAULT_DIRECTORY.mkdir();
+		} else if (!DEFAULT_DIRECTORY.isDirectory()) {
+			DEFAULT_DIRECTORY.mkdir();
+		}
 	}
 
-	public static TableManager getManager() {
+	public static DefaultManager getManager() {
 		return MANAGER;
 	}
 
@@ -49,7 +56,7 @@ public class TableManager {
 			// System.out.println("TableManage.initTable.Exist");
 		} else {
 			// System.out.println("TableManage.initTable.NotExist");
-			File file = new File(MengDB.get().getDataFolder(), name + ".json");
+			File file = new File(DEFAULT_DIRECTORY, name + ".table");
 			if (file.exists()) {
 				try {
 					FileInputStream stream = new FileInputStream(file);
@@ -73,7 +80,8 @@ public class TableManager {
 
 	public void saveTable(String name) {
 		if (getTables().containsKey(name)) {
-//			new Thread(new SaveTask(name, getTables().get(name).toString())).start();
+			// new Thread(new SaveTask(name,
+			// getTables().get(name).toString())).start();
 			this.pool.execute(new SaveTask(name, getTables().get(name).toString()));
 		}
 	}
@@ -93,7 +101,7 @@ public class TableManager {
 
 		@Override
 		public void run() {
-			File file = new File(MengDB.get().getDataFolder(), getName() + ".json");
+			File file = new File(DEFAULT_DIRECTORY, getName() + ".table");
 			try {
 				FileOutputStream out = new FileOutputStream(file);
 				OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8");

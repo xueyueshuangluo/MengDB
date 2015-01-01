@@ -1,9 +1,9 @@
 package com.mengcraft.db;
 
-import com.mengcraft.db.local.DefaultMengRecord;
+import com.mengcraft.db.local.DefaultRecord;
 
 public class MengBuilder {
 	public MengRecord getEmptyRecord() {
-		return new DefaultMengRecord();
+		return new DefaultRecord();
 	}
 }
