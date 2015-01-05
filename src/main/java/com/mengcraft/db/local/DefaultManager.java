@@ -24,17 +24,13 @@ import com.mengcraft.db.util.com.google.gson.JsonSyntaxException;
 public class DefaultManager implements MengManager {
 
 	private final static DefaultManager MANAGER = new DefaultManager();
-	private final static File DEFAULT_DIRECTORY = new File("data");
+	private final File dir = new File("data");
 	private final ConcurrentMap<String, MengTable> tables;
 	private final ExecutorService pool = Executors.newSingleThreadExecutor();
 
 	private DefaultManager() {
 		this.tables = new ConcurrentHashMap<String, MengTable>();
-		if (!DEFAULT_DIRECTORY.exists()) {
-			DEFAULT_DIRECTORY.mkdir();
-		} else if (!DEFAULT_DIRECTORY.isDirectory()) {
-			DEFAULT_DIRECTORY.mkdir();
-		}
+		getWorkFolder().mkdir();
 	}
 
 	public static DefaultManager getManager() {
@@ -56,7 +52,7 @@ public class DefaultManager implements MengManager {
 			// System.out.println("TableManage.initTable.Exist");
 		} else {
 			// System.out.println("TableManage.initTable.NotExist");
-			File file = new File(DEFAULT_DIRECTORY, name + ".table");
+			File file = new File(getWorkFolder(), name + ".table");
 			if (file.exists()) {
 				try {
 					FileInputStream stream = new FileInputStream(file);
@@ -90,6 +86,10 @@ public class DefaultManager implements MengManager {
 		return tables;
 	}
 
+	public File getWorkFolder() {
+		return dir;
+	}
+
 	private class SaveTask implements Runnable {
 		private final String name;
 		private final String data;
@@ -101,7 +101,7 @@ public class DefaultManager implements MengManager {
 
 		@Override
 		public void run() {
-			File file = new File(DEFAULT_DIRECTORY, getName() + ".table");
+			File file = new File(getWorkFolder(), getName() + ".table");
 			try {
 				FileOutputStream out = new FileOutputStream(file);
 				OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8");
