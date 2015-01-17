@@ -22,4 +22,6 @@ public interface MengTable {
 	public void delete(MengRecord record);
 	
 	public void delete(List<MengRecord> records);
+	
+	public void delete();
 }

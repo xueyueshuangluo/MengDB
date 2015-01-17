@@ -138,4 +138,9 @@ public class DefaultTable implements MengTable {
 		return getObject().toString();
 	}
 
+	@Override
+	public void delete() {
+		this.object.clear();
+	}
+
 }
