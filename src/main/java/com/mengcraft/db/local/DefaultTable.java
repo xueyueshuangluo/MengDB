@@ -14,30 +14,30 @@ import com.mengcraft.db.util.com.google.gson.JsonObject;
 
 public class DefaultTable implements MengTable {
 
-	private final JsonObject object;
+	private final JsonObject handle;
 
 	public DefaultTable(JsonObject object) {
-		this.object = object;
+		this.handle = object;
 	}
 
 	@Override
 	public void insert(MengRecord record) {
-		if (getObject().has(record.getUid())) {
-			getObject().add(UUID.randomUUID().toString(), record.getObject());
+		if (this.handle.has(record.getUid())) {
+			this.handle.add(UUID.randomUUID().toString(), record.getHandle());
 		} else {
-			getObject().add(record.getUid(), record.getObject());
+			this.handle.add(record.getUid(), record.getHandle());
 		}
 	}
 
 	@Override
 	public void update(MengRecord record) {
-		getObject().add(record.getUid(), record.getObject());
+		this.handle.add(record.getUid(), record.getHandle());
 	}
 
 	@Override
 	public List<MengRecord> find() {
 		List<MengRecord> list = new ArrayList<MengRecord>();
-		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
+		Set<Entry<String, JsonElement>> entrys = this.handle.entrySet();
 		for (Entry<String, JsonElement> entry : entrys) {
 			list.add(new DefaultRecord(entry.getKey(), entry.getValue().getAsJsonObject()));
 		}
@@ -47,7 +47,7 @@ public class DefaultTable implements MengTable {
 	@Override
 	public List<MengRecord> find(String key) {
 		List<MengRecord> list = new ArrayList<MengRecord>();
-		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
+		Set<Entry<String, JsonElement>> entrys = this.handle.entrySet();
 		for (Entry<String, JsonElement> entry : entrys) {
 			if (entry.getValue().getAsJsonObject().has(key)) {
 				list.add(new DefaultRecord(entry.getKey(), entry.getValue().getAsJsonObject()));
@@ -59,7 +59,7 @@ public class DefaultTable implements MengTable {
 	@Override
 	public List<MengRecord> find(String key, String value) {
 		List<MengRecord> list = new ArrayList<MengRecord>();
-		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
+		Set<Entry<String, JsonElement>> entrys = this.handle.entrySet();
 		for (Entry<String, JsonElement> entry : entrys) {
 			JsonObject o = entry.getValue().getAsJsonObject();
 			if (o.has(key) && o.get(key).getAsString().equals(value)) {
@@ -71,21 +71,20 @@ public class DefaultTable implements MengTable {
 
 	@Override
 	public List<MengRecord> find(String key, Number value) {
-		List<MengRecord> list = new ArrayList<MengRecord>();
-		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
-		for (Entry<String, JsonElement> entry : entrys) {
+		List<MengRecord> out = new ArrayList<MengRecord>();
+		for (Entry<String, JsonElement> entry : this.handle.entrySet()) {
 			JsonObject o = entry.getValue().getAsJsonObject();
 			JsonElement e = o.get(key);
 			if (e != null && compareElement(e, value) == 0) {
-				list.add(new DefaultRecord(entry.getKey(), o));
+				out.add(new DefaultRecord(entry.getKey(), o));
 			}
 		}
-		return list;
+		return out;
 	}
 
 	@Override
 	public MengRecord findOne(String key, Number value) {
-		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
+		Set<Entry<String, JsonElement>> entrys = this.handle.entrySet();
 		for (Entry<String, JsonElement> entry : entrys) {
 			JsonObject o = entry.getValue().getAsJsonObject();
 			JsonElement e = o.get(key);
@@ -98,7 +97,7 @@ public class DefaultTable implements MengTable {
 
 	@Override
 	public MengRecord findOne(String key, String value) {
-		Set<Entry<String, JsonElement>> entrys = getObject().entrySet();
+		Set<Entry<String, JsonElement>> entrys = this.handle.entrySet();
 		for (Entry<String, JsonElement> entry : entrys) {
 			JsonObject o = entry.getValue().getAsJsonObject();
 			if (o.has(key) && o.get(key).getAsString().equals(value)) {
@@ -110,7 +109,7 @@ public class DefaultTable implements MengTable {
 
 	@Override
 	public void delete(MengRecord record) {
-		getObject().remove(record.getUid());
+		this.handle.remove(record.getUid());
 	}
 
 	@Override
@@ -129,18 +128,14 @@ public class DefaultTable implements MengTable {
 		return 2;
 	}
 
-	private JsonObject getObject() {
-		return object;
-	}
-
 	@Override
 	public String toString() {
-		return getObject().toString();
+		return this.handle.toString();
 	}
 
 	@Override
 	public void delete() {
-		this.object.clear();
+		this.handle.clear();
 	}
 
 }

@@ -13,40 +13,45 @@ import com.mengcraft.db.util.com.google.gson.JsonPrimitive;
 
 public class DefaultRecord implements MengRecord {
 
-	private final JsonObject object;
+	private final JsonObject handle;
 	private final String uid;
 
 	public DefaultRecord() {
 		this(UUID.randomUUID().toString(), new JsonObject());
 	}
 
+	/**
+	 * Create MengRecord from JSON String.
+	 * 
+	 * @param json
+	 */
 	public DefaultRecord(String json) {
 		this(UUID.randomUUID().toString(), new JsonParser().parse(json).getAsJsonObject());
 	}
 
 	public DefaultRecord(String uid, JsonObject object) {
-		this.object = object;
+		this.handle = object;
 		this.uid = uid;
 	}
-	
+
 	@Override
-	public boolean containsKey(String key) {
-		return getObject().has(key);
+	public boolean has(String key) {
+		return getHandle().has(key);
 	}
 
 	@Override
 	public void put(String key, String value) {
-		getObject().addProperty(key, value);
+		getHandle().addProperty(key, value);
 	}
 
 	@Override
 	public void put(String key, Number value) {
-		getObject().addProperty(key, value);
+		getHandle().addProperty(key, value);
 	}
 
 	@Override
 	public void put(String key, Boolean value) {
-		getObject().addProperty(key, value);
+		getHandle().addProperty(key, value);
 	}
 
 	@Override
@@ -55,74 +60,69 @@ public class DefaultRecord implements MengRecord {
 		for (String string : value) {
 			array.add(new JsonPrimitive(string));
 		}
-		getObject().add(key, array);
+		getHandle().add(key, array);
 	}
 
 	@Override
 	public void remove(String key) {
-		getObject().remove(key);
+		getHandle().remove(key);
 	}
 
 	@Override
 	public int getInteger(String key) {
-		JsonElement element = getObject().get(key);
+		JsonElement element = getHandle().get(key);
 		return element != null ? element.getAsInt() : 0;
 	}
 
 	@Override
 	public long getLong(String key) {
-		JsonElement element = getObject().get(key);
+		JsonElement element = getHandle().get(key);
 		return element != null ? element.getAsLong() : 0;
 	}
 
 	@Override
 	public double getDouble(String key) {
-		JsonElement element = getObject().get(key);
+		JsonElement element = getHandle().get(key);
 		return element != null ? element.getAsDouble() : 0;
 	}
 
 	@Override
 	public float getFloat(String key) {
-		JsonElement element = getObject().get(key);
+		JsonElement element = getHandle().get(key);
 		return element != null ? element.getAsFloat() : 0;
 	}
 
 	@Override
 	public boolean getBoolean(String key) {
-		JsonElement element = getObject().get(key);
+		JsonElement element = getHandle().get(key);
 		return element != null ? element.getAsBoolean() : false;
 	}
 
 	@Override
 	public String getString(String key) {
-		JsonElement element = getObject().get(key);
+		JsonElement element = getHandle().get(key);
 		return element != null ? element.getAsString() : null;
 	}
 
 	@Override
 	public List<String> getStringList(String key) {
-		JsonElement element = getObject().get(key);
-		if (element != null && element.isJsonArray()) {
-			JsonArray array = element.getAsJsonArray();
-			List<String> list = new ArrayList<String>();
-			for (JsonElement jsonElement : array) {
-				list.add(jsonElement.getAsString());
-			}
-			return list;
-		} else {
-			return new ArrayList<String>();
+		List<String> out = new ArrayList<>();
+		JsonArray array = this.handle.get(key).getAsJsonArray();
+		for (JsonElement element : array) {
+			out.add(element.getAsString());
 		}
+		return out;
 	}
 
 	@Override
-	public JsonObject getObject() {
-		return object;
+	public JsonObject getHandle() {
+		return handle;
 	}
 
 	@Override
 	public String toString() {
 		JsonObject record = new JsonObject();
-		record.add(getUid(), getObject());
+		record.add(getUid(), getHandle());
 		return record.toString();
 	}
 

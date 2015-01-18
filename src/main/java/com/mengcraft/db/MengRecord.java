@@ -6,7 +6,7 @@ import com.mengcraft.db.util.com.google.gson.JsonObject;
 
 public interface MengRecord {
 	
-	public boolean containsKey(String key);
+	public boolean has(String key);
 	
 	public void put(String key, String value);
 
@@ -34,5 +34,5 @@ public interface MengRecord {
 	
 	public String getUid();
 	
-	public JsonObject getObject();
+	public JsonObject getHandle();
 }
